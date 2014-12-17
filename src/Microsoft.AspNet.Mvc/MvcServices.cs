@@ -36,6 +36,7 @@ namespace Microsoft.AspNet.Mvc
             yield return describe.Transient(typeof(INestedProviderManager<>), typeof(NestedProviderManager<>));
             yield return describe.Transient(typeof(INestedProviderManagerAsync<>), typeof(NestedProviderManagerAsync<>));
             yield return describe.Transient<MvcMarkerService, MvcMarkerService>();
+            yield return describe.Transient(typeof(IOptionActivator<>), typeof(DefaultOptionActivator<>));
 
             //
             // Core action discovery, filters and action execution.
@@ -75,6 +76,8 @@ namespace Microsoft.AspNet.Mvc
 
             yield return describe.Transient<INestedProvider<FilterProviderContext>, DefaultFilterProvider>();
 
+            yield return describe.Transient<IFilterActivator, DefaultFilterActivator>();
+
             //
             // Dataflow - ModelBinding, Validation and Formatting
             //
@@ -90,6 +93,8 @@ namespace Microsoft.AspNet.Mvc
             yield return describe.Scoped<ICompositeValueProviderFactory, CompositeValueProviderFactory>();
             yield return describe.Transient<IOutputFormattersProvider, DefaultOutputFormattersProvider>();
             yield return describe.Instance<JsonOutputFormatter>(new JsonOutputFormatter());
+
+            yield return describe.Transient<IModelBinderActivator, DefaultModelBinderActivator>();
 
             yield return describe.Transient<IModelValidatorProviderProvider, DefaultModelValidatorProviderProvider>();
             yield return describe.Scoped<ICompositeModelValidatorProvider, CompositeModelValidatorProvider>();
@@ -152,6 +157,7 @@ namespace Microsoft.AspNet.Mvc
             yield return describe.Transient<IHtmlGenerator, DefaultHtmlGenerator>();
 
             yield return describe.Transient<IViewComponentSelector, DefaultViewComponentSelector>();
+            yield return describe.Transient<IViewComponentFactory, DefaultViewComponentFactory>();
             yield return describe.Singleton<IViewComponentActivator, DefaultViewComponentActivator>();
             yield return describe.Transient<IViewComponentInvokerFactory, DefaultViewComponentInvokerFactory>();
             yield return describe.Transient<INestedProvider<ViewComponentInvokerProviderContext>,
