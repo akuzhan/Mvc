@@ -20,6 +20,11 @@ namespace Microsoft.AspNet.Mvc
 
         public Type DeclaredType { get; set; }
 
+        /// <summary>
+        /// Gets the HTTP status code.
+        /// </summary>
+        public int? StatusCode { get; set; }
+
         public ObjectResult(object value)
         {
             Value = value;
@@ -37,14 +42,21 @@ namespace Microsoft.AspNet.Mvc
                 Object = Value,
             };
 
+            if (StatusCode != null)
+            {
+                context.HttpContext.Response.StatusCode = (int)StatusCode;
+            }
+
             var selectedFormatter = SelectFormatter(formatterContext, formatters);
             if (selectedFormatter == null)
             {
                 // No formatter supports this.
                 context.HttpContext.Response.StatusCode = 406;
+                OnFormatting(context);
                 return;
             }
 
+            OnFormatting(context);
             await selectedFormatter.WriteAsync(formatterContext);
         }
 
@@ -215,6 +227,10 @@ namespace Microsoft.AspNet.Mvc
             }
 
             return formatters;
+        }
+
+        protected virtual void OnFormatting(ActionContext context)
+        {
         }
     }
 }
