@@ -628,6 +628,30 @@ namespace Microsoft.AspNet.Mvc
         }
 
         /// <summary>
+        /// Creates a <see cref="CreatedResult"/> object that produces a Created (201) response.
+        /// </summary>
+        /// <param name="uri">The URI at which the content has been created.</param>
+        /// <param name="value">The content value to negotiate and format in the entity body.</param>
+        /// <returns>The created <see cref="CreatedResult"/> for the response.</returns>
+        [NonAction]
+        public virtual CreatedResult Created([NotNull]string uri, object value)
+        {
+            return new CreatedResult(new Uri(uri), value);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="CreatedResult"/> object that produces a Created (201) response.
+        /// </summary>
+        /// <param name="uri">The URI at which the content has been created.</param>
+        /// <param name="value">The content value to negotiate and format in the entity body.</param>
+        /// <returns>The created <see cref="CreatedResult"/> for the response.</returns>
+        [NonAction]
+        public virtual CreatedResult Created([NotNull]Uri uri, object value)
+        {
+            return new CreatedResult(uri, value);
+        }
+
+        /// <summary>
         /// Called before the action method is invoked.
         /// </summary>
         /// <param name="context">The action executing context.</param>
