@@ -191,7 +191,14 @@ namespace Microsoft.AspNet.Mvc.Razor.Compilation
 
         private static CompilationMessage GetCompilationMessage(DiagnosticFormatter formatter, Diagnostic diagnostic)
         {
-            return new CompilationMessage(formatter.Format(diagnostic));
+            var lineSpan = diagnostic.Location.GetMappedLineSpan();
+            return new CompilationMessage(formatter.Format(diagnostic))
+            {
+                StartLine = lineSpan.StartLinePosition.Line,
+                StartColumn = lineSpan.StartLinePosition.Character,
+                EndLine = lineSpan.EndLinePosition.Line,
+                EndColumn = lineSpan.EndLinePosition.Character
+            };
         }
 
         private static bool IsError(Diagnostic diagnostic)
