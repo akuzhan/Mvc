@@ -634,9 +634,9 @@ namespace Microsoft.AspNet.Mvc
         /// <param name="value">The content value to negotiate and format in the entity body.</param>
         /// <returns>The created <see cref="CreatedResult"/> for the response.</returns>
         [NonAction]
-        public virtual CreatedResult Created([NotNull]string uri, object value)
+        public virtual CreatedResult Created([NotNull] string uri, object value)
         {
-            return new CreatedResult(new Uri(uri), value);
+            return new CreatedResult(uri, value);
         }
 
         /// <summary>
@@ -646,9 +646,9 @@ namespace Microsoft.AspNet.Mvc
         /// <param name="value">The content value to negotiate and format in the entity body.</param>
         /// <returns>The created <see cref="CreatedResult"/> for the response.</returns>
         [NonAction]
-        public virtual CreatedResult Created([NotNull]Uri uri, object value)
+        public virtual CreatedResult Created([NotNull] Uri uri, object value)
         {
-            return new CreatedResult(uri, value);
+            return new CreatedResult(uri.AbsoluteUri, value);
         }
 
         /// <summary>
@@ -685,10 +685,12 @@ namespace Microsoft.AspNet.Mvc
         /// <param name="value">The content value to negotiate and format in the entity body.</param>
         /// <returns>The created <see cref="CreatedAtRouteResult"/> for the response.</returns>
         [NonAction]
-        public virtual CreatedAtActionResult CreatedAtAction(string actionName, string controllerName,
-                                                             object routeValues, object value)
+        public virtual CreatedAtActionResult CreatedAtAction(string actionName,
+                                                             string controllerName,
+                                                             object routeValues,
+                                                             object value)
         {
-            return new CreatedAtActionResult(Url, actionName, controllerName, routeValues, value);
+            return new CreatedAtActionResult(actionName, controllerName, routeValues, value);
         }
 
         /// <summary>
@@ -725,7 +727,7 @@ namespace Microsoft.AspNet.Mvc
         [NonAction]
         public virtual CreatedAtRouteResult CreatedAtRoute(string routeName, object routeValues, object value)
         {
-            return new CreatedAtRouteResult(Url, routeName, routeValues, value);
+            return new CreatedAtRouteResult(routeName, routeValues, value);
         }
 
         /// <summary>

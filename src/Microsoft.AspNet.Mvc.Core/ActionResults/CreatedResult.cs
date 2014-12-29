@@ -6,8 +6,7 @@ using System;
 namespace Microsoft.AspNet.Mvc
 {
     /// <summary>
-    /// Represents an <see cref="ActionResult"/> that performs route generation and content negotiation
-    /// and returns a Created (201) response when content negotiation succeeds.
+    /// An <see cref="ActionResult"/> that returns a Created (201) response with a Location header.
     /// </summary>
     public class CreatedResult : ObjectResult
     {
@@ -16,8 +15,9 @@ namespace Microsoft.AspNet.Mvc
         /// provided.
         /// </summary>
         /// <param name="location">The location at which the content has been created.</param>
-        /// <param name="content">The content value to negotiate and format in the entity body.</param>
-        public CreatedResult([NotNull]Uri location, object content) : base(content)
+        /// <param name="value">The value to format in the entity body.</param>
+        public CreatedResult([NotNull] string location, object value)
+            : base(value)
         {
             Location = location;
         }
@@ -25,24 +25,14 @@ namespace Microsoft.AspNet.Mvc
         /// <summary>
         /// Gets the location at which the content has been created.
         /// </summary>
-        public Uri Location { get; private set; }
+        public string Location { get; private set; }
 
         /// <inheritdoc />
         protected override void OnFormatting(ActionContext context)
         {
             context.HttpContext.Response.StatusCode = 201;
 
-            string location;
-            if (Location.IsAbsoluteUri)
-            {
-                location = Location.AbsoluteUri;
-            }
-            else
-            {
-                location = Location.GetComponents(UriComponents.SerializationInfoString, UriFormat.UriEscaped);
-            }
-
-            context.HttpContext.Response.Headers.Add("Location", new string[] { location });
+            context.HttpContext.Response.Headers.Add("Location", new string[] { Location });
         }
     }
 }

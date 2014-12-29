@@ -4,35 +4,38 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.AspNet.Mvc.Core;
+using Microsoft.Framework.DependencyInjection;
 
 namespace Microsoft.AspNet.Mvc
 {
     /// <summary>
-    /// Represents an <see cref="ActionResult"/> that performs route generation and content negotiation
-    /// and returns a Created (201) response when content negotiation succeeds.
+    /// An <see cref="ActionResult"/> that returns a Created (201) response with a Location header.
     /// </summary>
     public class CreatedAtActionResult : ObjectResult
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CreatedAtActionResult"/> class with the values
+        /// Initializes a new instance of the <see cref="CreatedAtActionResult"/> with the values
         /// provided.
         /// </summary>
         /// <param name="actionName">The name of the action to use for generating the URL.</param>
-        /// /// <param name="controllerName">The name of the controller to use for generating the URL.</param>
+        /// <param name="controllerName">The name of the controller to use for generating the URL.</param>
         /// <param name="routeValues">The route data to use for generating the URL.</param>
-        /// <param name="content">The content value to negotiate and format in the entity body.</param>
-        public CreatedAtActionResult([NotNull] IUrlHelper urlHelper,
-                                    string actionName,
-                                    string controllerName,
-                                    object routeValues,
-                                    object content)
-            : base(content)
+        /// <param name="value">The value to format in the entity body.</param>
+        public CreatedAtActionResult(string actionName,
+                                     string controllerName,
+                                     object routeValues,
+                                     object value)
+            : base(value)
         {
-            UrlHelper = urlHelper;
+            ActionName = actionName;
+            ControllerName = controllerName;
             RouteValues = TypeHelper.ObjectToDictionary(routeValues);
         }
 
-        public IUrlHelper UrlHelper { get; private set; }
+        /// <summary>
+        /// Gets or sets the helpers for building the URL using the route data
+        /// </summary>
+        public IUrlHelper UrlHelper { get; set; }
 
         /// <summary>
         /// Gets the name of the action to use for generating the URL.
@@ -54,7 +57,9 @@ namespace Microsoft.AspNet.Mvc
         {
             context.HttpContext.Response.StatusCode = 201;
 
-            var url = UrlHelper.Action(ActionName, ControllerName, RouteValues);
+            var urlHelper = UrlHelper ?? context.HttpContext.RequestServices.GetRequiredService<IUrlHelper>();
+
+            var url = urlHelper.Action(ActionName, ControllerName, RouteValues);
 
             if (string.IsNullOrEmpty(url))
             {

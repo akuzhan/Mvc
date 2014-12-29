@@ -4,7 +4,7 @@
 namespace Microsoft.AspNet.Mvc
 {
     /// <summary>
-    /// Represents an <see cref="HttpStatusCodeResult"/> that when
+    /// A <see cref="HttpStatusCodeResult"/> that when
     /// executed will produce a Bad Request (400) response.
     /// </summary>
     public class BadRequestResult : HttpStatusCodeResult

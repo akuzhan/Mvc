@@ -4,12 +4,12 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.AspNet.Mvc.Core;
+using Microsoft.Framework.DependencyInjection;
 
 namespace Microsoft.AspNet.Mvc
 {
     /// <summary>
-    /// Represents an <see cref="ActionResult"/> that performs route generation and content negotiation
-    /// and returns a Created (201) response when content negotiation succeeds.
+    /// An <see cref="ActionResult"/> that returns a Created (201) response with a Location header.
     /// </summary>
     public class CreatedAtRouteResult : ObjectResult
     {
@@ -18,11 +18,9 @@ namespace Microsoft.AspNet.Mvc
         /// provided.
         /// </summary>
         /// <param name="routeValues">The route data to use for generating the URL.</param>
-        /// <param name="content">The content value to negotiate and format in the entity body.</param>
-        public CreatedAtRouteResult([NotNull] IUrlHelper urlHelper,
-                                    object routeValues,
-                                    object content)
-            : this(urlHelper, routeName: null, routeValues: routeValues, content: content)
+        /// <param name="value">The value to format in the entity body.</param>
+        public CreatedAtRouteResult(object routeValues, object value)
+            : this(routeName: null, routeValues: routeValues, value: value)
         {
         }
 
@@ -32,19 +30,20 @@ namespace Microsoft.AspNet.Mvc
         /// </summary>
         /// <param name="routeName">The name of the route to use for generating the URL.</param>
         /// <param name="routeValues">The route data to use for generating the URL.</param>
-        /// <param name="content">The content value to negotiate and format in the entity body.</param>
-        public CreatedAtRouteResult([NotNull] IUrlHelper urlHelper, 
-                                    string routeName, 
-                                    object routeValues, 
-                                    object content) 
-            : base(content)
+        /// <param name="value">The value to format in the entity body.</param>
+        public CreatedAtRouteResult(string routeName,
+                                    object routeValues,
+                                    object value)
+            : base(value)
         {
-            UrlHelper = urlHelper;
             RouteName = routeName;
             RouteValues = TypeHelper.ObjectToDictionary(routeValues);
         }
 
-        public IUrlHelper UrlHelper { get; private set; }
+        /// <summary>
+        /// Gets or sets the helpers for building the URL using the route data
+        /// </summary>
+        public IUrlHelper UrlHelper { get; set; }
 
         /// <summary>
         /// Gets the name of the route to use for generating the URL.
@@ -61,7 +60,9 @@ namespace Microsoft.AspNet.Mvc
         {
             context.HttpContext.Response.StatusCode = 201;
 
-            var url = UrlHelper.RouteUrl(RouteValues);
+            var urlHelper = UrlHelper ?? context.HttpContext.RequestServices.GetRequiredService<IUrlHelper>();
+
+            var url = urlHelper.RouteUrl(RouteName, RouteValues);
 
             if (string.IsNullOrEmpty(url))
             {
