@@ -1514,6 +1514,38 @@ namespace Microsoft.AspNet.Mvc.Core
             return string.Format(CultureInfo.CurrentCulture, GetString("ViewComponent_AmbiguousTypeMatch_Item"), p0, p1);
         }
 
+        /// <summary>
+        /// An error has occured.
+        /// </summary>
+        internal static string HttpError_ErrorFiller
+        {
+            get { return GetString("HttpError_ErrorFiller"); }
+        }
+
+        /// <summary>
+        /// An error has occured.
+        /// </summary>
+        internal static string FormatHttpError_ErrorFiller()
+        {
+            return GetString("HttpError_ErrorFiller");
+        }
+
+        /// <summary>
+        /// The model state is valid.
+        /// </summary>
+        internal static string HttpError_ValidModelState
+        {
+            get { return GetString("HttpError_ValidModelState"); }
+        }
+
+        /// <summary>
+        /// The model state is valid.
+        /// </summary>
+        internal static string FormatHttpError_ValidModelState()
+        {
+            return GetString("HttpError_ValidModelState");
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);
