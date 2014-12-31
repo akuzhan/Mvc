@@ -18,17 +18,17 @@ namespace LoggingWebSite
             // Set up application services
             app.UseServices(services =>
             {
-                services.AddSingleton<ILoggerFactory, LoggerFactory>();
+                services.AddSingleton<ILoggerFactory, CustomLoggerFactory>();
 
                 // Add MVC services to the services container
                 services.AddMvc(configuration);
             });
 
-            // serializes log messages from TestSink into json format to the client
-            app.Map(new PathString("/log"), (appBuilder) =>
-            {
-                appBuilder.UseMiddleware<ElmMessagesSerializerMiddleware>();
-            });
+            //// serializes log messages from TestSink into json format to the client
+            //app.Map(new PathString("/log"), (appBuilder) =>
+            //{
+            //    appBuilder.UseMiddleware<ElmMessagesSerializerMiddleware>();
+            //});
 
             // Add MVC to the request pipeline
             app.UseMvc(routes =>
