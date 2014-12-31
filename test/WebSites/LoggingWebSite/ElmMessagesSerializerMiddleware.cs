@@ -106,8 +106,6 @@ namespace LoggingWebSite
             AddMessage(new LogInfo()
             {
                 Name = node.Name,
-                Time = node.StartTime,
-                Severity = LogLevel.Verbose,
                 Message = "Begin-Scope:" + node.State
             });
 
@@ -136,8 +134,6 @@ namespace LoggingWebSite
             AddMessage(new LogInfo()
             {
                 Name = node.Name,
-                Time = node.EndTime,
-                Severity = LogLevel.Verbose,
                 Message = "End-Scope:" + node.State
             });
         }
